@@ -1,7 +1,11 @@
+/* eslint-disable no-unused-vars */
+import { useContext } from "react"
 import { Link } from "react-router-dom"
+import { AuthContext } from './../AuthProvider/AuthProvider';
 
 
 const Register = () => {
+  const auth = useContext(AuthContext)
   return (
     <div className="hero bg-base-200 min-h-screen">
   <div className="hero-content flex-col lg:flex-row-reverse">
