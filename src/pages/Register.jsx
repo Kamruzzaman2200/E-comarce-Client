@@ -1,11 +1,21 @@
 /* eslint-disable no-unused-vars */
-import { useContext } from "react"
 import { Link } from "react-router-dom"
-import { AuthContext } from './../AuthProvider/AuthProvider';
+import useAuth from "../hooks/useAuth"
+import { useForm } from "react-hook-form";
 
 
 const Register = () => {
-  const auth = useContext(AuthContext)
+  const {CreateUser} =useAuth();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+  const onSubmit=(data)=>{
+    console.log(data);
+
+  }
   return (
     <div className="hero bg-base-200 min-h-screen">
   <div className="hero-content flex-col lg:flex-row-reverse">
@@ -16,24 +26,63 @@ const Register = () => {
       </p>
     </div>
     <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
-      <form className="card-body">
+      <form className="card-body" onSubmit={handleSubmit(onSubmit)}>
         <div className="form-control">
           <label className="label">
             <span className="label-text">Email</span>
           </label>
-          <input type="email" placeholder="email" className="input input-bordered" required />
+          <input type="email"
+           placeholder="email"
+            className="input input-bordered"
+             {...register("email", { required: true })} 
+             
+             />
+             {errors.email &&
+              <p className="text-red-500">
+                This field is required
+              </p>}
         </div>
         <div className="form-control">
           <label className="label">
             <span className="label-text">Password</span>
           </label>
-          <input type="password" placeholder="password" className="input input-bordered" required />
+          <input type="password"
+           placeholder="password"
+            className="input input-bordered"
+              {...register("password", { required: true, minLength: 6 })}
+             />
+              {errors.password?.type === 'required' && (
+                <p className="text-red-500">
+                  Password is required
+                </p>)}
+              {errors.password?.type === 'minLength' && (
+                <p className="text-red-500">
+                  Password must Have at least 6 characters
+                </p>)}
         </div>
         <div className="form-control">
           <label className="label">
             <span className="label-text">Confirm Password</span>
           </label>
-          <input type="password" placeholder="password" className="input input-bordered" required />
+          <input type="password"
+           placeholder="password"
+            className="input input-bordered"
+            {...register("confirmPassword", { 
+              required: true, 
+              validate: value => {
+                if (watch("password") === value) {
+                  return true;
+                } else {
+                  return "Passwords do not match";
+                }
+              }
+            })}
+               
+              />
+              {errors.confirmPassword?.type === 'required' && (
+                <p className="text-red-500">
+                  Both Password must match
+                </p>)}
         </div>
         <div className="form-control mt-6">
           <button className="btn btn-primary">Sign Up</button>
