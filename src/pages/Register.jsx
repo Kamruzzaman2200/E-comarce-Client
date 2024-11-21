@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import useAuth from "../hooks/useAuth"
 import { useForm } from "react-hook-form";
 
@@ -12,9 +12,11 @@ const Register = () => {
     watch,
     formState: { errors },
   } = useForm();
-  const onSubmit=(data)=>{
-    console.log(data);
+const navigate=useNavigate();
 
+  const onSubmit=(data)=>{
+    CreateUser(data.email, data.password );
+    navigate("/");
   }
   return (
     <div className="hero bg-base-200 min-h-screen">
@@ -37,10 +39,10 @@ const Register = () => {
              {...register("email", { required: true })} 
              
              />
-             {errors.email &&
+             {errors.email &&(
               <p className="text-red-500">
                 This field is required
-              </p>}
+              </p>)}
         </div>
         <div className="form-control">
           <label className="label">
@@ -85,7 +87,7 @@ const Register = () => {
                 </p>)}
         </div>
         <div className="form-control mt-6">
-          <button className="btn btn-primary">Sign Up</button>
+          <button className="btn btn-primary" type="submit">Sign Up</button>
         </div>
         <p className="p-6 text-center text-sm text-base-content">Already have an account? <Link to="/login" className="text-primary">Login</Link></p>
       </form>
